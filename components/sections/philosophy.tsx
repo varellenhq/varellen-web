@@ -147,7 +147,7 @@ function PremiumRubiks() {
             <RoundedBox
               key={c.id}
               args={[0.98, 0.98, 0.98]}
-              radius={0.08}
+              radius={0.015} // Extremely sharp, precise edges
               smoothness={4}
               position={[c.x, c.y, c.z]}
               ref={(el) => {
@@ -155,13 +155,16 @@ function PremiumRubiks() {
               }}
             >
               <meshStandardMaterial
-                color="#0a0a0a" // Deep graphite/black
+                color="#030303" // Pure black for maximum contrast
                 metalness={1}
-                roughness={0.12}
-                envMapIntensity={2}
+                roughness={0.05} // Very sharp, mirror-like reflections
+                envMapIntensity={3}
               />
-              {/* Optional: Inner glowing core effect or silver edges could go here, 
-                  but raw reflective black looks incredibly premium. */}
+              {/* Subtle silver edge highlights for absolute precision */}
+              <lineSegments>
+                <edgesGeometry args={[new THREE.BoxGeometry(0.98, 0.98, 0.98)]} />
+                <lineBasicMaterial color="#1a1a1a" />
+              </lineSegments>
             </RoundedBox>
           ))}
         </group>
