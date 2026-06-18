@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { getBaseUrl } from '@/lib/utils'
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -6,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://varellen.com/sitemap.xml',
+    sitemap: `${getBaseUrl()}/sitemap.xml`,
   }
 }

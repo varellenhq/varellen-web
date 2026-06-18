@@ -22,8 +22,10 @@ const inter = Inter({
   subsets: ['latin'],
 })
 
+import { getBaseUrl } from '@/lib/utils'
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://varellen.com'),
+  metadataBase: new URL(getBaseUrl()),
   title: {
     default: 'Varellen Technologies | Intelligence, Engineered.',
     template: '%s | Varellen Technologies',
@@ -45,7 +47,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://varellen.com',
+    url: getBaseUrl(),
     title: 'Varellen Technologies | Founded by Ashok Raj Pasala',
     description:
       'Founded by Ashok Raj Pasala, Varellen Technologies builds intelligent systems, enterprise software, cloud infrastructure, and cybersecurity solutions for the organizations shaping tomorrow.',
@@ -86,8 +88,8 @@ export default function RootLayout({
     '@type': 'Organization',
     name: 'Varellen Technologies',
     alternateName: 'Varellen',
-    url: 'https://varellen.com',
-    logo: 'https://varellen.com/logo.png',
+    url: getBaseUrl(),
+    logo: `${getBaseUrl()}/logo.png`,
     sameAs: [
       'https://github.com/varellenhq',
       'https://linkedin.com/in/varellen-technologies-8ab599417/',

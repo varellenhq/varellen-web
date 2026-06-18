@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
+import { getBaseUrl } from '@/lib/utils'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://varellen.com'
+  const baseUrl = getBaseUrl()
 
   return [
     {
