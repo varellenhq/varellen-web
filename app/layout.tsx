@@ -23,10 +23,52 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Varellen Technologies — Intelligence, Engineered.',
+  metadataBase: new URL('https://varellen.com'),
+  title: {
+    default: 'Varellen Technologies | Intelligence, Engineered.',
+    template: '%s | Varellen Technologies',
+  },
   description:
-    'Varellen Technologies builds intelligent systems, software, infrastructure, and security solutions for the organizations shaping tomorrow.',
-  generator: 'v0.app',
+    'Varellen Technologies builds intelligent systems, enterprise software, cloud infrastructure, and cybersecurity solutions for the organizations shaping tomorrow.',
+  keywords: [
+    'Artificial Intelligence',
+    'Software Engineering',
+    'Enterprise Cloud',
+    'Cybersecurity',
+    'Automation',
+    'Tech Consulting',
+    'Varellen Technologies',
+    'Ashok Pasala',
+  ],
+  authors: [{ name: 'Ashok Pasala' }],
+  creator: 'Varellen Technologies',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://varellen.com',
+    title: 'Varellen Technologies | Intelligence, Engineered.',
+    description:
+      'Varellen Technologies builds intelligent systems, enterprise software, cloud infrastructure, and cybersecurity solutions for the organizations shaping tomorrow.',
+    siteName: 'Varellen Technologies',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Varellen Technologies | Intelligence, Engineered.',
+    description:
+      'Varellen Technologies builds intelligent systems, enterprise software, cloud infrastructure, and cybersecurity solutions for the organizations shaping tomorrow.',
+    creator: '@varellenhq',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 export const viewport: Viewport = {
