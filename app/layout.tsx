@@ -89,7 +89,7 @@ export default function RootLayout({
     url: 'https://varellen.com',
     logo: 'https://varellen.com/logo.png',
     sameAs: [
-      'https://github.com/varellen',
+      'https://github.com/varellenhq',
       'https://linkedin.com/in/varellen-technologies-8ab599417/',
       'https://x.com/varellenhq'
     ],
