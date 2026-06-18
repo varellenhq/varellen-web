@@ -82,25 +82,56 @@ export function Philosophy() {
                     'linear-gradient(165deg, var(--secondary) 0%, var(--card) 30%, var(--muted) 60%, var(--card) 100%)',
                 }}
               />
-              {/* Subtle metallic sheen */}
-              <div
-                className="absolute inset-0 opacity-30"
-                style={{
-                  background:
-                    'radial-gradient(ellipse at 30% 20%, var(--silver), transparent 60%)',
-                }}
-              />
               {/* Grid pattern overlay */}
               <div
-                className="absolute inset-0 opacity-[0.04]"
+                className="absolute inset-0 opacity-[0.05]"
                 style={{
                   backgroundImage:
                     'linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px)',
-                  backgroundSize: '40px 40px',
+                  backgroundSize: '32px 32px',
+                  backgroundPosition: 'center',
+                }}
+              />
+              {/* Radial glow */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'radial-gradient(circle at 50% 50%, var(--silver) 0%, transparent 60%)',
+                  opacity: 0.1,
                 }}
               />
             </motion.div>
-            <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+
+            {/* "Engineered Infrastructure" UI Rings */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              {/* Outer Ring */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 40, ease: 'linear', repeat: Infinity }}
+                className="absolute size-[60%] rounded-full border border-dashed border-silver/30"
+              />
+              {/* Middle Ring */}
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 30, ease: 'linear', repeat: Infinity }}
+                className="absolute size-[45%] rounded-full border-[1.5px] border-silver/40"
+              />
+              {/* Inner Circle pulsing */}
+              <motion.div
+                animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.8, 0.5] }}
+                transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity }}
+                className="absolute size-[15%] rounded-full bg-silver/20 backdrop-blur-md border border-silver/50"
+              />
+              
+              {/* Crosshair lines */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="h-full w-[1px] bg-silver/10" />
+                <div className="absolute h-[1px] w-full bg-silver/10" />
+              </div>
+            </div>
+
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between p-6 md:p-8">
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-silver">
                 Engineered Infrastructure
