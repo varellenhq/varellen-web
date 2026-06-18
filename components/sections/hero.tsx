@@ -27,79 +27,65 @@ export function Hero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.3 })
+      const tl = gsap.timeline({ delay: 0.2 })
 
-      // Label fade in
+      // Label fade in from top
       if (labelRef.current) {
-        gsap.set(labelRef.current, { opacity: 0, y: 12 })
+        gsap.set(labelRef.current, { opacity: 0, y: -20, filter: 'blur(8px)' })
         tl.to(labelRef.current, {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          filter: 'blur(0px)',
+          duration: 1,
           ease: 'power3.out',
         })
       }
 
-      // Heading lines reveal
-      const lines = h1Ref.current?.querySelectorAll('.hero-line')
-      if (lines?.length) {
-        gsap.set(lines, { y: '110%' })
+      // Heading lines slide from opposite edges
+      const lineLeft = h1Ref.current?.querySelector('.hero-line-left')
+      const lineRight = h1Ref.current?.querySelector('.hero-line-right')
+      
+      if (lineLeft && lineRight) {
+        gsap.set(lineLeft, { opacity: 0, x: -60, filter: 'blur(12px)' })
+        gsap.set(lineRight, { opacity: 0, x: 60, filter: 'blur(12px)' })
+        
         tl.to(
-          lines,
-          {
-            y: '0%',
-            duration: 1,
-            stagger: 0.15,
-            ease: 'power3.out',
-          },
-          '-=0.4'
+          lineLeft,
+          { opacity: 1, x: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out' },
+          '-=0.6'
+        )
+        tl.to(
+          lineRight,
+          { opacity: 1, x: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out' },
+          '-=0.8'
         )
       }
 
-      // Description
+      // Description fade in and slide up
       if (descRef.current) {
-        gsap.set(descRef.current, { opacity: 0, y: 16 })
+        gsap.set(descRef.current, { opacity: 0, y: 30, filter: 'blur(8px)' })
         tl.to(
           descRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.9,
-            ease: 'power3.out',
-          },
-          '-=0.5'
+          { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power3.out' },
+          '-=0.7'
         )
       }
 
-      // CTAs
+      // CTAs slide up
       if (ctaRef.current) {
         const buttons = ctaRef.current.children
-        gsap.set(buttons, { opacity: 0, y: 16 })
+        gsap.set(buttons, { opacity: 0, y: 20 })
         tl.to(
           buttons,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: 'power3.out',
-          },
-          '-=0.4'
+          { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: 'power3.out' },
+          '-=0.6'
         )
       }
 
-      // Scroll indicator
+      // Scroll indicator fade in
       if (scrollRef.current) {
         gsap.set(scrollRef.current, { opacity: 0 })
-        tl.to(
-          scrollRef.current,
-          {
-            opacity: 1,
-            duration: 1,
-            ease: 'power2.out',
-          },
-          '-=0.2'
-        )
+        tl.to(scrollRef.current, { opacity: 1, duration: 1.5, ease: 'power2.out' }, '-=0.2')
       }
     }, sectionRef)
 
@@ -131,11 +117,11 @@ export function Hero() {
           ref={h1Ref}
           className="font-heading mt-7 text-balance text-[clamp(2.5rem,10.5vw,11rem)] font-medium leading-[0.92] tracking-[-0.03em]"
         >
-          <span className="block overflow-hidden">
-            <span className="hero-line block">Intelligence,</span>
+          <span className="block">
+            <span className="hero-line-left block">Intelligence,</span>
           </span>
-          <span className="block overflow-hidden text-muted-foreground">
-            <span className="hero-line block">Engineered.</span>
+          <span className="block text-muted-foreground">
+            <span className="hero-line-right block">Engineered.</span>
           </span>
         </h1>
 

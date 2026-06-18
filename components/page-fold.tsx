@@ -43,7 +43,7 @@ export function PageFold() {
   // The flap shows the OPPOSITE theme's surface (the back of the page)
   const flapClass =
     theme === 'dark'
-      ? 'bg-[#f7f7f7]' // Light theme background
+      ? 'bg-[#edeef1]' // Light theme background (softer cool-gray)
       : 'bg-[#050505]' // Dark theme background
   const labelClass = theme === 'dark' ? 'text-[#0a0a0a]' : 'text-[#f5f5f5]'
 
