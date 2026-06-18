@@ -3,6 +3,9 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'motion/react'
 import { ScrollReveal, GsapTextReveal } from '@/components/scroll-reveal'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { Environment, Float } from '@react-three/drei'
+import * as THREE from 'three'
 
 const PRINCIPLES = [
   {
@@ -21,6 +24,31 @@ const PRINCIPLES = [
     d: 'We optimise for the decade, engineering infrastructure that outlasts the trend cycle.',
   },
 ]
+
+function SpinningCube() {
+  const meshRef = useRef<THREE.Mesh>(null)
+
+  useFrame((state, delta) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.x += delta * 0.15
+      meshRef.current.rotation.y += delta * 0.2
+    }
+  })
+
+  return (
+    <Float floatIntensity={1.5} speed={1.5} rotationIntensity={0.5}>
+      <mesh ref={meshRef}>
+        <boxGeometry args={[2.2, 2.2, 2.2]} />
+        <meshStandardMaterial
+          color="#b0b0b0"
+          metalness={0.95}
+          roughness={0.15}
+          envMapIntensity={1.2}
+        />
+      </mesh>
+    </Float>
+  )
+}
 
 export function Philosophy() {
   const imageRef = useRef<HTMLDivElement>(null)
@@ -67,7 +95,7 @@ export function Philosophy() {
           </div>
         </div>
 
-        {/* Abstract geometric visual replacing the static image */}
+        {/* Abstract geometric visual with 3D Cube */}
         <div ref={imageRef} className="relative">
           <div className="relative aspect-[4/5] overflow-hidden rounded-xl border border-border bg-card">
             {/* Animated gradient background simulating metallic surface */}
@@ -103,36 +131,19 @@ export function Philosophy() {
               />
             </motion.div>
 
-            {/* "Engineered Infrastructure" UI Rings */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              {/* Outer Ring */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 40, ease: 'linear', repeat: Infinity }}
-                className="absolute size-[60%] rounded-full border border-dashed border-silver/30"
-              />
-              {/* Middle Ring */}
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 30, ease: 'linear', repeat: Infinity }}
-                className="absolute size-[45%] rounded-full border-[1.5px] border-silver/40"
-              />
-              {/* Inner Circle pulsing */}
-              <motion.div
-                animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.8, 0.5] }}
-                transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity }}
-                className="absolute size-[15%] rounded-full bg-silver/20 backdrop-blur-md border border-silver/50"
-              />
-              
-              {/* Crosshair lines */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="h-full w-[1px] bg-silver/10" />
-                <div className="absolute h-[1px] w-full bg-silver/10" />
-              </div>
+            {/* React Three Fiber Cube */}
+            <div className="absolute inset-0 opacity-90">
+              <Canvas camera={{ position: [0, 0, 6], fov: 45 }} dpr={[1, 2]}>
+                <ambientLight intensity={0.6} />
+                <directionalLight position={[10, 20, 10]} intensity={1.5} />
+                <directionalLight position={[-10, -20, -10]} intensity={0.5} />
+                <SpinningCube />
+                <Environment preset="city" />
+              </Canvas>
             </div>
 
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between p-6 md:p-8">
+            <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-background/80 via-background/10 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between p-6 md:p-8 pointer-events-none">
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-silver">
                 Engineered Infrastructure
               </span>
