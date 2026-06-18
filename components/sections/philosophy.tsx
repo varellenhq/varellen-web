@@ -30,13 +30,14 @@ function PremiumRubiks() {
   const groupRef = useRef<THREE.Group>(null)
   const pivotRef = useRef<THREE.Group>(null)
 
-  // Create 27 cubies for a 3x3x3 grid
+  // Create 26 cubies for a 3x3x3 grid (omitting the core)
   const cubies = useMemo(() => {
     const arr = []
-    const offset = 1.05 // Spacing between cubies
+    const offset = 1.08 // Wider spacing for deep mechanical grooves
     for (let x = -1; x <= 1; x++) {
       for (let y = -1; y <= 1; y++) {
         for (let z = -1; z <= 1; z++) {
+          if (x === 0 && y === 0 && z === 0) continue // Skip the absolute center
           arr.push({
             x: x * offset,
             y: y * offset,
@@ -55,7 +56,6 @@ function PremiumRubiks() {
     axis: 'x' as 'x' | 'y' | 'z',
     targetAngle: 0,
     currentAngle: 0,
-    speed: 0.08, // Rotation speed
     pause: 0, // Pause between moves
   })
 
@@ -66,8 +66,8 @@ function PremiumRubiks() {
     if (!pivotRef.current || !groupRef.current || !outerGroupRef.current) return
 
     // Slow global tumble
-    outerGroupRef.current.rotation.x += delta * 0.1
-    outerGroupRef.current.rotation.y += delta * 0.15
+    outerGroupRef.current.rotation.x += delta * 0.12
+    outerGroupRef.current.rotation.y += delta * 0.18
 
     if (state.current.pause > 0) {
       state.current.pause -= delta
@@ -81,7 +81,7 @@ function PremiumRubiks() {
         | 'x'
         | 'y'
         | 'z'
-      const slices = [-1.05, 0, 1.05]
+      const slices = [-1.08, 0, 1.08]
       const slice = slices[Math.floor(Math.random() * slices.length)]
       const dir = Math.random() > 0.5 ? 1 : -1
 
@@ -109,18 +109,17 @@ function PremiumRubiks() {
       state.current.currentAngle = 0
       state.current.isAnimating = true
     } else {
-      // Animate the pivot
-      const step =
-        state.current.targetAngle > 0
-          ? state.current.speed
-          : -state.current.speed
-      state.current.currentAngle += step
+      // Animate the pivot using lerp for a premium magnetic "snap" effect
+      state.current.currentAngle = THREE.MathUtils.lerp(
+        state.current.currentAngle,
+        state.current.targetAngle,
+        0.18 // Easing factor
+      )
       pivotRef.current.rotation[state.current.axis] = state.current.currentAngle
 
-      // Check if move is complete
+      // Check if move is almost complete
       if (
-        Math.abs(state.current.currentAngle) >=
-        Math.abs(state.current.targetAngle)
+        Math.abs(state.current.targetAngle - state.current.currentAngle) < 0.005
       ) {
         // Snap to exact 90 degrees
         pivotRef.current.rotation[state.current.axis] = state.current.targetAngle
@@ -133,7 +132,7 @@ function PremiumRubiks() {
         })
 
         state.current.isAnimating = false
-        state.current.pause = 0.2 // Brief pause between moves
+        state.current.pause = 0.25 // Brief pause between moves
       }
     }
   })
@@ -143,10 +142,24 @@ function PremiumRubiks() {
       <group ref={outerGroupRef} scale={1.2}>
         <group ref={groupRef}>
           <group ref={pivotRef} />
+          
+          {/* Glowing Energy Core */}
+          <mesh>
+            <octahedronGeometry args={[0.55, 0]} />
+            <meshStandardMaterial
+              color="#ffffff"
+              emissive="#ffffff"
+              emissiveIntensity={2}
+              toneMapped={false}
+              wireframe
+            />
+            <pointLight intensity={4} distance={6} color="#ffffff" decay={1.5} />
+          </mesh>
+
           {cubies.map((c, i) => (
             <RoundedBox
               key={c.id}
-              args={[0.98, 0.98, 0.98]}
+              args={[0.94, 0.94, 0.94]} // Smaller cubies to create deep grooves
               radius={0.015} // Extremely sharp, precise edges
               smoothness={4}
               position={[c.x, c.y, c.z]}
@@ -162,7 +175,7 @@ function PremiumRubiks() {
               />
               {/* Subtle silver edge highlights for absolute precision */}
               <lineSegments>
-                <edgesGeometry args={[new THREE.BoxGeometry(0.98, 0.98, 0.98)]} />
+                <edgesGeometry args={[new THREE.BoxGeometry(0.94, 0.94, 0.94)]} />
                 <lineBasicMaterial color="#1a1a1a" />
               </lineSegments>
             </RoundedBox>
