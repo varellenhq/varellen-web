@@ -145,13 +145,12 @@ function PremiumRubiks() {
           
           {/* Glowing Energy Core */}
           <mesh>
-            <octahedronGeometry args={[0.55, 0]} />
+            <sphereGeometry args={[0.45, 32, 32]} />
             <meshStandardMaterial
               color="#ffffff"
               emissive="#ffffff"
-              emissiveIntensity={2}
+              emissiveIntensity={2.5}
               toneMapped={false}
-              wireframe
             />
             <pointLight intensity={4} distance={6} color="#ffffff" decay={1.5} />
           </mesh>
