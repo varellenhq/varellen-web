@@ -54,7 +54,7 @@ export function SiteFooter() {
               </p>
               <div className="mt-8">
                 <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-foreground">
-                  Ashok Pasala
+                  Ashok Raj Pasala
                 </p>
                 <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
                   Founder & CEO

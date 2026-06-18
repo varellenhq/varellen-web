@@ -29,33 +29,33 @@ export const metadata: Metadata = {
     template: '%s | Varellen Technologies',
   },
   description:
-    'Varellen Technologies builds intelligent systems, enterprise software, cloud infrastructure, and cybersecurity solutions for the organizations shaping tomorrow.',
+    'Founded by Ashok Raj Pasala, Varellen Technologies builds intelligent systems, enterprise software, cloud infrastructure, and cybersecurity solutions for the organizations shaping tomorrow.',
   keywords: [
+    'Ashok Raj Pasala',
+    'Ashok Pasala',
+    'Varellen Technologies',
+    'Varellen',
     'Artificial Intelligence',
     'Software Engineering',
     'Enterprise Cloud',
     'Cybersecurity',
-    'Automation',
-    'Tech Consulting',
-    'Varellen Technologies',
-    'Ashok Pasala',
   ],
-  authors: [{ name: 'Ashok Pasala' }],
-  creator: 'Varellen Technologies',
+  authors: [{ name: 'Ashok Raj Pasala' }],
+  creator: 'Ashok Raj Pasala | Varellen Technologies',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://varellen.com',
-    title: 'Varellen Technologies | Intelligence, Engineered.',
+    title: 'Varellen Technologies | Founded by Ashok Raj Pasala',
     description:
-      'Varellen Technologies builds intelligent systems, enterprise software, cloud infrastructure, and cybersecurity solutions for the organizations shaping tomorrow.',
+      'Founded by Ashok Raj Pasala, Varellen Technologies builds intelligent systems, enterprise software, cloud infrastructure, and cybersecurity solutions for the organizations shaping tomorrow.',
     siteName: 'Varellen Technologies',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Varellen Technologies | Intelligence, Engineered.',
+    title: 'Varellen Technologies | Founded by Ashok Raj Pasala',
     description:
-      'Varellen Technologies builds intelligent systems, enterprise software, cloud infrastructure, and cybersecurity solutions for the organizations shaping tomorrow.',
+      'Founded by Ashok Raj Pasala, Varellen Technologies builds intelligent systems, enterprise software, cloud infrastructure, and cybersecurity solutions.',
     creator: '@varellenhq',
   },
   robots: {
@@ -80,6 +80,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // JSON-LD Structured Data to strictly bind Ashok Raj Pasala to Varellen Technologies for Google's Knowledge Graph
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Varellen Technologies',
+    alternateName: 'Varellen',
+    url: 'https://varellen.com',
+    logo: 'https://varellen.com/logo.png',
+    sameAs: [
+      'https://github.com/varellen',
+      'https://linkedin.com/in/varellen-technologies-8ab599417/',
+      'https://x.com/varellenhq'
+    ],
+    founder: {
+      '@type': 'Person',
+      name: 'Ashok Raj Pasala',
+      alternateName: 'Ashok Pasala',
+      jobTitle: 'Founder & CEO',
+      worksFor: {
+        '@type': 'Organization',
+        name: 'Varellen Technologies'
+      }
+    }
+  }
+
   return (
     <html
       lang="en"
@@ -87,6 +112,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans antialiased">
+        {/* Inject JSON-LD Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <ThemeProvider>
           <GsapProvider>
             <PageFold />

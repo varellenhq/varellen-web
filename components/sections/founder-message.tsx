@@ -22,7 +22,7 @@ export function FounderMessage() {
         <ScrollReveal variant="fade-up" delay={0.3}>
           <div className="mt-12 flex flex-col items-center gap-1">
             <div className="font-mono text-sm font-medium uppercase tracking-[0.14em]">
-              Ashok Pasala
+              Ashok Raj Pasala
             </div>
             <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
               Founder &amp; CEO
