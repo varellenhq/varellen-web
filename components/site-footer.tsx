@@ -43,12 +43,12 @@ export function SiteFooter() {
     <footer className="border-t border-border bg-background">
       <div className="mx-auto max-w-[1400px] px-5 py-16 md:px-10 md:py-24">
         <ScrollReveal variant="stagger" staggerAmount={0.08} staggerSelector=":scope > div">
-          <div className="grid gap-14 lg:grid-cols-[1.4fr_repeat(4,1fr)]">
-            <div>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-4 lg:grid-cols-[1.4fr_repeat(4,1fr)] lg:gap-14">
+            <div className="col-span-2 md:col-span-4 lg:col-span-1">
               <div className="font-heading text-2xl font-semibold tracking-tight">
                 Varellen
               </div>
-              <p className="mt-4 max-w-xs text-pretty text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-4 max-w-xs text-pretty text-[13px] leading-relaxed text-muted-foreground">
                 Intelligence, Engineered. Building intelligent systems for the
                 organizations shaping tomorrow.
               </p>

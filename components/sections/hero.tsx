@@ -129,7 +129,7 @@ export function Hero() {
 
         <h1
           ref={h1Ref}
-          className="font-heading mt-7 text-balance text-[clamp(3.2rem,11vw,11rem)] font-medium leading-[0.92] tracking-[-0.03em]"
+          className="font-heading mt-7 text-balance text-[clamp(2.5rem,10.5vw,11rem)] font-medium leading-[0.92] tracking-[-0.03em]"
         >
           <span className="block overflow-hidden">
             <span className="hero-line block">Intelligence,</span>
@@ -141,7 +141,7 @@ export function Hero() {
 
         <p
           ref={descRef}
-          className="mt-9 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg"
+          className="mt-8 max-w-xl text-pretty text-[15px] leading-relaxed text-muted-foreground sm:text-base md:text-lg"
         >
           Building intelligent systems, software, infrastructure, and security
           solutions for the organizations shaping tomorrow.
