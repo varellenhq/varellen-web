@@ -22,22 +22,18 @@ export function PageFold() {
   const draggingRef = useRef(false)
 
   // Use a large constant for PEAK to represent the full screen diagonal
-  // We'll calculate the actual required size during the flip
   const [peakSize, setPeakSize] = useState(1500)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // diagonal of the screen * 2 to be safe
+      // diagonal of the screen * 2.5 to be safe
       setPeakSize(Math.max(window.innerWidth, window.innerHeight) * 2.5)
     }
   }, [])
 
   // progress 0 -> 1 from BASE -> peakSize
-  const progress = useTransform(size, [BASE, 500], [0, 1]) // capped at 500 for the shadow effect
-  const creaseOpacity = useTransform(progress, [0, 1], [0.35, 0.7])
-  const shadowBlur = useTransform(size, [BASE, 500], [14, 80])
-  const shadowSpread = useTransform(size, [BASE, 500], [-6, -20])
-  const shadowFilter = useMotionTemplate`drop-shadow(-2px 2px ${shadowBlur}px rgba(0,0,0,0.5))`
+  const shadowBlur = useTransform(size, [BASE, 500], [15, 100])
+  const shadowFilter = useMotionTemplate`drop-shadow(0px 0px ${shadowBlur}px rgba(0,0,0,0.6))`
 
   const px = useMotionTemplate`${size}px`
 
@@ -59,7 +55,7 @@ export function PageFold() {
     // 1. Peel the page across the entire screen
     await animate(size, peakSize, { duration: 0.85, ease: [0.65, 0, 0.1, 1] }).finished
     
-    // 2. The screen is now completely covered by the flap (which matches the target theme).
+    // 2. The screen is now completely covered by the exposed inverted background.
     // Swap the actual DOM theme.
     toggleTheme()
     
@@ -107,7 +103,7 @@ export function PageFold() {
       onDrag={(_, info) => {
         // peeling inward (down-left) grows the fold
         const pull = Math.max(0, -info.offset.x) + Math.max(0, info.offset.y)
-        size.set(Math.min(500, BASE + pull))
+        size.set(Math.min(peakSize, BASE + pull * 1.5)) // Added multiplier for more responsive drag
       }}
       onDragEnd={(_, info) => {
         draggingRef.current = false
@@ -130,50 +126,47 @@ export function PageFold() {
         theme === 'dark' ? 'light' : 'dark'
       } mode`}
     >
-      {/* Soft shadow cast by the lifted flap onto the page */}
+      {/* 1. EXPOSED AREA (Shows the new theme underneath using real-time inversion) */}
       <motion.div
         className="absolute inset-0"
         style={{
-          clipPath: 'polygon(100% 0, 100% 100%, 0 0)',
-          background: 'rgba(0,0,0,1)',
-          opacity: creaseOpacity,
-          filter: shadowFilter,
-          boxShadow: undefined,
+          clipPath: 'polygon(100% 0, 100% 100%, 0 0)', // Top-Right triangle
+          backdropFilter: 'invert(1) hue-rotate(180deg)',
+          WebkitBackdropFilter: 'invert(1) hue-rotate(180deg)',
         }}
         aria-hidden
       />
 
-      {/* The peeled flap — back of the page, opposite theme */}
+      {/* 2. THE FLAP (Folded over, casting a shadow onto the exposed page) */}
       <motion.div
         className={`absolute inset-0 ${flapClass}`}
         style={{
-          clipPath: 'polygon(100% 0, 100% 100%, 0 0)',
+          clipPath: 'polygon(0 0, 100% 100%, 0 100%)', // Bottom-Left triangle
           filter: shadowFilter,
-          marginRight: shadowSpread,
         }}
         aria-hidden
       >
-        {/* crease highlight along the hypotenuse */}
+        {/* Professional paper cut edge along the fold hypotenuse */}
         <div
-          className="absolute inset-0 opacity-40 transition-opacity duration-300"
+          className="absolute inset-0"
           style={{
-            background:
-              'linear-gradient(225deg, transparent 49.4%, rgba(255,255,255,0.4) 49.7%, rgba(255,255,255,0.05) 50.2%, transparent 51%)',
+            background: `linear-gradient(45deg, transparent 49.6%, ${
+              theme === 'dark' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.3)'
+            } 50%, transparent 50.4%)`,
           }}
         />
-        {/* sun/silver highlight */}
+        {/* Shading to simulate the 3D curl of the paper */}
         <div
-          className="absolute inset-0 mix-blend-overlay opacity-50"
+          className="absolute inset-0 mix-blend-overlay"
           style={{
-            background:
-              'radial-gradient(120% 120% at 100% 0%, rgba(255,255,255,0.3), transparent 55%)',
+            background: 'linear-gradient(45deg, transparent 40%, rgba(0,0,0,0.4) 50%)',
           }}
         />
       </motion.div>
 
-      {/* mode label sits in the flap */}
+      {/* 3. MODE LABEL (Sits on the folded flap) */}
       <motion.span
-        className={`pointer-events-none absolute right-2 top-2 font-mono text-[9px] font-medium uppercase tracking-[0.18em] ${labelClass}`}
+        className={`pointer-events-none absolute left-4 bottom-4 font-mono text-[9px] font-medium uppercase tracking-[0.18em] ${labelClass}`}
         style={{ opacity: useTransform(size, [BASE, BASE + 50], [1, 0]) }}
       >
         {theme === 'dark' ? 'Light' : 'Dark'}
