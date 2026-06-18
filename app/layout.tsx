@@ -111,7 +111,7 @@ export default function RootLayout({
       className={`dark ${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased theme-transition">
         {/* Inject JSON-LD Schema */}
         <script
           type="application/ld+json"
