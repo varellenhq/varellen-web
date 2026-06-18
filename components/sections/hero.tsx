@@ -11,7 +11,10 @@ const EngineScene = dynamic(
     import('@/components/three/engine-scene').then((m) => ({
       default: m.EngineScene,
     })),
-  { ssr: false }
+  { 
+    ssr: false,
+    loading: () => <div className="absolute inset-0 -z-10 bg-transparent" />
+  }
 )
 
 export function Hero() {

@@ -2,6 +2,7 @@
 
 import { useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { RoundedBox } from '@react-three/drei'
 import { useTheme } from '@/components/theme-provider'
 import * as THREE from 'three'
 
@@ -81,11 +82,11 @@ function FloatingCube({
   scrollProgress: React.MutableRefObject<number>
 }) {
   const meshRef = useRef<THREE.Mesh>(null)
-  const materialRef = useRef<THREE.MeshStandardMaterial>(null)
+  const materialRef = useRef<THREE.MeshPhysicalMaterial>(null)
 
-  const darkColor = useMemo(() => new THREE.Color('#c0c0c0'), [])
+  const darkColor = useMemo(() => new THREE.Color('#9ca3af'), [])
   const lightColor = useMemo(() => new THREE.Color('#4a4a4a'), [])
-  const currentColor = useMemo(() => new THREE.Color('#c0c0c0'), [])
+  const currentColor = useMemo(() => new THREE.Color('#9ca3af'), [])
 
   useFrame((state) => {
     if (!meshRef.current || !materialRef.current) return
@@ -116,15 +117,23 @@ function FloatingCube({
   })
 
   return (
-    <mesh ref={meshRef} position={data.position} scale={data.scale}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial
+    <RoundedBox 
+      ref={meshRef} 
+      position={data.position} 
+      scale={data.scale}
+      args={[1, 1, 1]}
+      radius={0.06}
+      smoothness={4}
+    >
+      <meshPhysicalMaterial
         ref={materialRef}
-        color="#c0c0c0"
-        metalness={0.95}
-        roughness={0.08}
-        envMapIntensity={1.5}
+        color="#9ca3af"
+        metalness={1}
+        roughness={0.1}
+        clearcoat={1}
+        clearcoatRoughness={0.1}
+        envMapIntensity={2.5}
       />
-    </mesh>
+    </RoundedBox>
   )
 }

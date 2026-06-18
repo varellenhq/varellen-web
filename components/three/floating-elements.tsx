@@ -120,12 +120,14 @@ function Ring({
   return (
     <mesh ref={meshRef} position={position} scale={scale}>
       <torusGeometry args={[1, 0.04, 16, 48]} />
-      <meshStandardMaterial
+      <meshPhysicalMaterial
         ref={matRef}
         color="#b0b0b0"
-        metalness={0.95}
+        metalness={1}
         roughness={0.1}
-        envMapIntensity={1.3}
+        clearcoat={1}
+        clearcoatRoughness={0.1}
+        envMapIntensity={2}
       />
     </mesh>
   )
@@ -167,12 +169,15 @@ function Panel({
   return (
     <mesh ref={meshRef} position={position} rotation={rotation}>
       <boxGeometry args={size} />
-      <meshStandardMaterial
+      <meshPhysicalMaterial
         ref={matRef}
         color="#333333"
-        metalness={0.88}
-        roughness={0.2}
-        envMapIntensity={0.9}
+        metalness={0.9}
+        roughness={0.1}
+        transmission={0.5}
+        ior={1.5}
+        thickness={0.5}
+        envMapIntensity={1.5}
         transparent
         opacity={0.85}
       />
@@ -222,12 +227,14 @@ function Fragment({
       ) : (
         <tetrahedronGeometry args={[1, 0]} />
       )}
-      <meshStandardMaterial
+      <meshPhysicalMaterial
         ref={matRef}
         color="#d0d0d0"
         metalness={0.9}
         roughness={0.14}
-        envMapIntensity={1.1}
+        clearcoat={1}
+        clearcoatRoughness={0.2}
+        envMapIntensity={1.5}
       />
     </mesh>
   )
