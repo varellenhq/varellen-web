@@ -20,7 +20,6 @@ export function EngineScene() {
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollProgress = useRef(0)
   const [isMobile, setIsMobile] = useState(false)
-  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -41,19 +40,12 @@ export function EngineScene() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Delay ready state to prevent layout shift
-  useEffect(() => {
-    const timer = setTimeout(() => setIsReady(true), 100)
-    return () => clearTimeout(timer)
-  }, [])
-
   const dpr = isMobile ? Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 1.5) : Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2)
 
   return (
     <div
       ref={containerRef}
       className="absolute inset-0 -z-10"
-      style={{ opacity: isReady ? 1 : 0, transition: 'opacity 1.2s ease-out' }}
     >
       <Canvas
         dpr={dpr}
