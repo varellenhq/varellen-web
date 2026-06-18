@@ -130,13 +130,11 @@ export function PageFold() {
         theme === 'dark' ? 'light' : 'dark'
       } mode`}
     >
-      {/* 1. EXPOSED AREA (Shows the new theme underneath using real-time inversion) */}
+      {/* 1. EXPOSED AREA (Shows the new theme underneath using solid color for max performance) */}
       <motion.div
-        className="absolute inset-0"
+        className={`absolute inset-0 ${flapClass}`}
         style={{
           clipPath: 'polygon(100% 0, 100% 100%, 0 0)', // Top-Right triangle
-          backdropFilter: 'invert(1) hue-rotate(180deg)',
-          WebkitBackdropFilter: 'invert(1) hue-rotate(180deg)',
         }}
         aria-hidden
       />

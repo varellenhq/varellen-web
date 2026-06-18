@@ -19,10 +19,10 @@ interface CubeData {
  * Each cube has independent rotation + sinusoidal drift.
  */
 export function CubeCluster({
-  scrollProgress = 0,
+  scrollProgress,
   count = 10,
 }: {
-  scrollProgress?: number
+  scrollProgress: React.MutableRefObject<number>
   count?: number
 }) {
   const { theme } = useTheme()
@@ -78,7 +78,7 @@ function FloatingCube({
 }: {
   data: CubeData
   isDark: boolean
-  scrollProgress: number
+  scrollProgress: React.MutableRefObject<number>
 }) {
   const meshRef = useRef<THREE.Mesh>(null)
   const materialRef = useRef<THREE.MeshStandardMaterial>(null)
@@ -91,6 +91,7 @@ function FloatingCube({
     if (!meshRef.current || !materialRef.current) return
 
     const t = state.clock.elapsedTime
+    const sp = scrollProgress.current
 
     // Independent rotation
     meshRef.current.rotation.x += data.rotSpeed[0] * 0.008
@@ -104,7 +105,7 @@ function FloatingCube({
     meshRef.current.position.y =
       data.position[1] +
       Math.cos(t * data.driftSpeed * 0.7 + phase) * data.driftAmplitude[1] -
-      scrollProgress * 1.5
+      sp * 1.5
     meshRef.current.position.z =
       data.position[2] + Math.sin(t * data.driftSpeed * 0.5 + phase + 1) * data.driftAmplitude[2]
 

@@ -12,7 +12,7 @@ import * as THREE from 'three'
  *
  * Max movement: ±0.3 units on any axis.
  */
-export function CameraRig({ scrollProgress = 0 }: { scrollProgress?: number }) {
+export function CameraRig({ scrollProgress }: { scrollProgress: React.MutableRefObject<number> }) {
   const { camera } = useThree()
   const mouseRef = useRef({ x: 0, y: 0 })
   const smoothMouse = useRef({ x: 0, y: 0 })
@@ -46,8 +46,9 @@ export function CameraRig({ scrollProgress = 0 }: { scrollProgress?: number }) {
     const mouseY = smoothMouse.current.y * 0.15
 
     // Scroll offset
-    const scrollZ = scrollProgress * 1.5
-    const scrollY = scrollProgress * 0.3
+    const sp = scrollProgress.current
+    const scrollZ = sp * 1.5
+    const scrollY = sp * 0.3
 
     // Target camera position
     const targetX = driftX + mouseX

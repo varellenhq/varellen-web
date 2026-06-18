@@ -10,7 +10,7 @@ import * as THREE from 'three'
  * Architectural, luxury industrial appearance.
  * Very slow rotation, subtle breathing scale.
  */
-export function Monolith({ scrollProgress = 0 }: { scrollProgress?: number }) {
+export function Monolith({ scrollProgress }: { scrollProgress: React.MutableRefObject<number> }) {
   const meshRef = useRef<THREE.Mesh>(null)
   const materialRef = useRef<THREE.MeshStandardMaterial>(null)
   const { theme } = useTheme()
@@ -37,9 +37,10 @@ export function Monolith({ scrollProgress = 0 }: { scrollProgress?: number }) {
     meshRef.current.scale.setScalar(breathe)
 
     // Scroll-linked Y offset
+    const sp = scrollProgress.current
     meshRef.current.position.y = THREE.MathUtils.lerp(
       meshRef.current.position.y,
-      0.3 - scrollProgress * 2.5,
+      0.3 - sp * 2.5,
       0.03
     )
 

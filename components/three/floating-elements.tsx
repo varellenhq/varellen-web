@@ -9,7 +9,7 @@ import * as THREE from 'three'
  * Secondary floating elements — metallic rings, abstract panels, geometric fragments.
  * Creates visual depth and architectural feel.
  */
-export function FloatingElements({ scrollProgress = 0 }: { scrollProgress?: number }) {
+export function FloatingElements({ scrollProgress }: { scrollProgress: React.MutableRefObject<number> }) {
   const { theme } = useTheme()
   const isDark = theme === 'dark'
 
@@ -94,7 +94,7 @@ function Ring({
   position: [number, number, number]
   scale: number
   isDark: boolean
-  scrollProgress: number
+  scrollProgress: React.MutableRefObject<number>
   rotAxis: 'x' | 'y' | 'z'
   speed: number
 }) {
@@ -106,10 +106,11 @@ function Ring({
   useFrame((state) => {
     if (!meshRef.current || !matRef.current) return
     const t = state.clock.elapsedTime
+    const sp = scrollProgress.current
 
     meshRef.current.rotation[rotAxis] = t * speed
     meshRef.current.position.y =
-      position[1] + Math.sin(t * 0.2 + position[0]) * 0.3 - scrollProgress * 1.2
+      position[1] + Math.sin(t * 0.2 + position[0]) * 0.3 - sp * 1.2
 
     targetColor.set(isDark ? '#b0b0b0' : '#5a5a5a')
     currentColor.lerp(targetColor, 0.02)
@@ -140,7 +141,7 @@ function Panel({
   position: [number, number, number]
   rotation: [number, number, number]
   isDark: boolean
-  scrollProgress: number
+  scrollProgress: React.MutableRefObject<number>
   size: [number, number, number]
 }) {
   const meshRef = useRef<THREE.Mesh>(null)
@@ -151,11 +152,12 @@ function Panel({
   useFrame((state) => {
     if (!meshRef.current || !matRef.current) return
     const t = state.clock.elapsedTime
+    const sp = scrollProgress.current
 
     meshRef.current.rotation.y = rotation[1] + Math.sin(t * 0.08) * 0.05
     meshRef.current.rotation.x = rotation[0] + Math.cos(t * 0.1) * 0.03
     meshRef.current.position.y =
-      position[1] + Math.sin(t * 0.15 + position[2]) * 0.2 - scrollProgress * 0.8
+      position[1] + Math.sin(t * 0.15 + position[2]) * 0.2 - sp * 0.8
 
     targetColor.set(isDark ? '#333333' : '#999999')
     currentColor.lerp(targetColor, 0.02)
@@ -187,7 +189,7 @@ function Fragment({
 }: {
   position: [number, number, number]
   isDark: boolean
-  scrollProgress: number
+  scrollProgress: React.MutableRefObject<number>
   type: 'octahedron' | 'tetrahedron'
   scale: number
 }) {
@@ -199,13 +201,14 @@ function Fragment({
   useFrame((state) => {
     if (!meshRef.current || !matRef.current) return
     const t = state.clock.elapsedTime
+    const sp = scrollProgress.current
 
     meshRef.current.rotation.x = t * 0.18
     meshRef.current.rotation.y = t * 0.12
     meshRef.current.position.y =
       position[1] +
       Math.sin(t * 0.25 + position[0] * 2) * 0.35 -
-      scrollProgress * 1.0
+      sp * 1.0
 
     targetColor.set(isDark ? '#d0d0d0' : '#606060')
     currentColor.lerp(targetColor, 0.02)

@@ -18,7 +18,7 @@ import { CameraRig } from './camera-rig'
  */
 export function EngineScene() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [scrollProgress, setScrollProgress] = useState(0)
+  const scrollProgress = useRef(0)
   const [isMobile, setIsMobile] = useState(false)
   const [isReady, setIsReady] = useState(false)
 
@@ -35,7 +35,7 @@ export function EngineScene() {
     const onScroll = () => {
       const vh = window.innerHeight
       const progress = Math.min(window.scrollY / (vh * 1.5), 1)
-      setScrollProgress(progress)
+      scrollProgress.current = progress
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
