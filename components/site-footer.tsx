@@ -11,8 +11,6 @@ const COLS = [
       { label: 'Software Engineering', href: '/services' },
       { label: 'Cybersecurity', href: '/services' },
       { label: 'Cloud Infrastructure', href: '/services' },
-      { label: 'Automation', href: '/services' },
-      { label: 'Consulting', href: '/services' },
     ],
   },
   {
@@ -21,7 +19,6 @@ const COLS = [
       { label: 'About', href: '/about' },
       { label: 'Industries', href: '/industries' },
       { label: 'Contact', href: '/contact' },
-      { label: 'Mission', href: '/about' },
     ],
   },
   {
@@ -31,6 +28,14 @@ const COLS = [
       { label: 'varellenhq@gmail.com', href: 'mailto:varellenhq@gmail.com' },
     ],
   },
+  {
+    title: 'Social',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/varellen' },
+      { label: 'LinkedIn', href: 'https://linkedin.com/in/varellen-technologies-8ab599417/' },
+      { label: 'X (Twitter)', href: 'https://x.com/varellenhq' },
+    ],
+  },
 ]
 
 export function SiteFooter() {
@@ -38,7 +43,7 @@ export function SiteFooter() {
     <footer className="border-t border-border bg-background">
       <div className="mx-auto max-w-[1400px] px-5 py-16 md:px-10 md:py-24">
         <ScrollReveal variant="stagger" staggerAmount={0.08} staggerSelector=":scope > div">
-          <div className="grid gap-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+          <div className="grid gap-14 lg:grid-cols-[1.4fr_repeat(4,1fr)]">
             <div>
               <div className="font-heading text-2xl font-semibold tracking-tight">
                 Varellen
@@ -47,6 +52,14 @@ export function SiteFooter() {
                 Intelligence, Engineered. Building intelligent systems for the
                 organizations shaping tomorrow.
               </p>
+              <div className="mt-8">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-foreground">
+                  Ashok Pasala
+                </p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                  Founder & CEO
+                </p>
+              </div>
             </div>
 
             {COLS.map((col) => (
@@ -59,6 +72,8 @@ export function SiteFooter() {
                     <li key={link.label}>
                       <Link
                         href={link.href}
+                        target={link.href.startsWith('http') ? '_blank' : undefined}
+                        rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                         className="text-sm text-foreground/80 transition-colors duration-300 hover:text-foreground"
                       >
                         {link.label}
