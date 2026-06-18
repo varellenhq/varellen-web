@@ -1,10 +1,10 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useMemo, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'motion/react'
 import { ScrollReveal, GsapTextReveal } from '@/components/scroll-reveal'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Environment, Float } from '@react-three/drei'
+import { Environment, Float, RoundedBox } from '@react-three/drei'
 import * as THREE from 'three'
 
 const PRINCIPLES = [
@@ -25,27 +25,147 @@ const PRINCIPLES = [
   },
 ]
 
-function SpinningCube() {
-  const meshRef = useRef<THREE.Mesh>(null)
+function PremiumRubiks() {
+  const outerGroupRef = useRef<THREE.Group>(null)
+  const groupRef = useRef<THREE.Group>(null)
+  const pivotRef = useRef<THREE.Group>(null)
 
-  useFrame((state, delta) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x += delta * 0.15
-      meshRef.current.rotation.y += delta * 0.2
+  // Create 27 cubies for a 3x3x3 grid
+  const cubies = useMemo(() => {
+    const arr = []
+    const offset = 1.05 // Spacing between cubies
+    for (let x = -1; x <= 1; x++) {
+      for (let y = -1; y <= 1; y++) {
+        for (let z = -1; z <= 1; z++) {
+          arr.push({
+            x: x * offset,
+            y: y * offset,
+            z: z * offset,
+            id: `${x}${y}${z}`,
+          })
+        }
+      }
+    }
+    return arr
+  }, [])
+
+  // Animation state
+  const state = useRef({
+    isAnimating: false,
+    axis: 'x' as 'x' | 'y' | 'z',
+    targetAngle: 0,
+    currentAngle: 0,
+    speed: 0.08, // Rotation speed
+    pause: 0, // Pause between moves
+  })
+
+  // Refs to all cubie meshes to attach/detach them dynamically
+  const cubieRefs = useRef<THREE.Mesh[]>([])
+
+  useFrame((_, delta) => {
+    if (!pivotRef.current || !groupRef.current || !outerGroupRef.current) return
+
+    // Slow global tumble
+    outerGroupRef.current.rotation.x += delta * 0.1
+    outerGroupRef.current.rotation.y += delta * 0.15
+
+    if (state.current.pause > 0) {
+      state.current.pause -= delta
+      return
+    }
+
+    if (!state.current.isAnimating) {
+      // Pick a random move
+      const axes = ['x', 'y', 'z']
+      const axis = axes[Math.floor(Math.random() * axes.length)] as
+        | 'x'
+        | 'y'
+        | 'z'
+      const slices = [-1.05, 0, 1.05]
+      const slice = slices[Math.floor(Math.random() * slices.length)]
+      const dir = Math.random() > 0.5 ? 1 : -1
+
+      // Reset pivot
+      pivotRef.current.rotation.set(0, 0, 0)
+      pivotRef.current.updateMatrixWorld()
+
+      // Find all cubies in the chosen slice
+      cubieRefs.current.forEach((cubie) => {
+        if (!cubie) return
+        
+        // Get world position and map back to local group coordinates
+        const pos = new THREE.Vector3()
+        cubie.getWorldPosition(pos)
+        groupRef.current!.worldToLocal(pos)
+
+        // If the cubie is on the chosen slice (with small tolerance), attach it to pivot
+        if (Math.abs(pos[axis] - slice) < 0.1) {
+          pivotRef.current!.attach(cubie)
+        }
+      })
+
+      state.current.axis = axis
+      state.current.targetAngle = (Math.PI / 2) * dir
+      state.current.currentAngle = 0
+      state.current.isAnimating = true
+    } else {
+      // Animate the pivot
+      const step =
+        state.current.targetAngle > 0
+          ? state.current.speed
+          : -state.current.speed
+      state.current.currentAngle += step
+      pivotRef.current.rotation[state.current.axis] = state.current.currentAngle
+
+      // Check if move is complete
+      if (
+        Math.abs(state.current.currentAngle) >=
+        Math.abs(state.current.targetAngle)
+      ) {
+        // Snap to exact 90 degrees
+        pivotRef.current.rotation[state.current.axis] = state.current.targetAngle
+        pivotRef.current.updateMatrixWorld()
+
+        // Detach cubies back to the main group
+        const children = [...pivotRef.current.children]
+        children.forEach((child) => {
+          groupRef.current!.attach(child)
+        })
+
+        state.current.isAnimating = false
+        state.current.pause = 0.2 // Brief pause between moves
+      }
     }
   })
 
   return (
-    <Float floatIntensity={1.5} speed={1.5} rotationIntensity={0.5}>
-      <mesh ref={meshRef}>
-        <boxGeometry args={[2.2, 2.2, 2.2]} />
-        <meshStandardMaterial
-          color="#b0b0b0"
-          metalness={0.95}
-          roughness={0.15}
-          envMapIntensity={1.2}
-        />
-      </mesh>
+    <Float floatIntensity={1} speed={1.5} rotationIntensity={0.2}>
+      <group ref={outerGroupRef} scale={1.2}>
+        <group ref={groupRef}>
+          <group ref={pivotRef} />
+          {cubies.map((c, i) => (
+            <RoundedBox
+              key={c.id}
+              args={[0.98, 0.98, 0.98]}
+              radius={0.08}
+              smoothness={4}
+              position={[c.x, c.y, c.z]}
+              ref={(el) => {
+                if (el) cubieRefs.current[i] = el as any
+              }}
+            >
+              <meshStandardMaterial
+                color="#0a0a0a" // Deep graphite/black
+                metalness={1}
+                roughness={0.12}
+                envMapIntensity={2}
+              />
+              {/* Optional: Inner glowing core effect or silver edges could go here, 
+                  but raw reflective black looks incredibly premium. */}
+            </RoundedBox>
+          ))}
+        </group>
+      </group>
     </Float>
   )
 }
@@ -95,7 +215,7 @@ export function Philosophy() {
           </div>
         </div>
 
-        {/* Abstract geometric visual with 3D Cube */}
+        {/* Abstract geometric visual with 3D Rubiks Cube */}
         <div ref={imageRef} className="relative">
           <div className="relative aspect-[4/5] overflow-hidden rounded-xl border border-border bg-card">
             {/* Animated gradient background simulating metallic surface */}
@@ -133,11 +253,11 @@ export function Philosophy() {
 
             {/* React Three Fiber Cube */}
             <div className="absolute inset-0 opacity-90">
-              <Canvas camera={{ position: [0, 0, 6], fov: 45 }} dpr={[1, 2]}>
-                <ambientLight intensity={0.6} />
-                <directionalLight position={[10, 20, 10]} intensity={1.5} />
+              <Canvas camera={{ position: [0, 0, 9], fov: 45 }} dpr={[1, 2]}>
+                <ambientLight intensity={0.5} />
+                <directionalLight position={[10, 20, 10]} intensity={1.8} />
                 <directionalLight position={[-10, -20, -10]} intensity={0.5} />
-                <SpinningCube />
+                <PremiumRubiks />
                 <Environment preset="city" />
               </Canvas>
             </div>
