@@ -101,13 +101,14 @@ export function PageFold() {
         draggingRef.current = true
       }}
       onDrag={(_, info) => {
-        // peeling inward (down-left) grows the fold
-        const pull = Math.max(0, -info.offset.x) + Math.max(0, info.offset.y)
-        size.set(Math.min(peakSize, BASE + pull * 1.5)) // Added multiplier for more responsive drag
+        // Find the maximum drag distance in either the X (left) or Y (down) direction
+        // This ensures the fold's corner perfectly aligns with the mouse pointer
+        const pull = Math.max(0, -info.offset.x, info.offset.y)
+        size.set(Math.min(peakSize, BASE + pull))
       }}
       onDragEnd={(_, info) => {
         draggingRef.current = false
-        const pull = Math.max(0, -info.offset.x) + Math.max(0, info.offset.y)
+        const pull = Math.max(0, -info.offset.x, info.offset.y)
         if (pull > THRESHOLD) {
           flip()
         } else {
