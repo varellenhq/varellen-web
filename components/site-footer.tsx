@@ -31,7 +31,8 @@ const COLS = [
   {
     title: 'Social',
     links: [
-      { label: 'GitHub', href: 'https://github.com/varellen' },
+      { label: 'GitHub (@varellenhq)', href: 'https://github.com/varellenhq' },
+      { label: 'GitHub (@varellen)', href: 'https://github.com/varellen' },
       { label: 'LinkedIn', href: 'https://linkedin.com/in/varellen-technologies-8ab599417/' },
       { label: 'X (Twitter)', href: 'https://x.com/varellenhq' },
     ],

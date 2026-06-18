@@ -92,6 +92,7 @@ export default function RootLayout({
     logo: `${getBaseUrl()}/logo.png`,
     sameAs: [
       'https://github.com/varellenhq',
+      'https://github.com/varellen',
       'https://linkedin.com/in/varellen-technologies-8ab599417/',
       'https://x.com/varellenhq'
     ],
