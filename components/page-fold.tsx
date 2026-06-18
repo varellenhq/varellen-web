@@ -55,22 +55,22 @@ export function PageFold() {
     if (busy) return
     setBusy(true)
     
-    // 1. Peel the page across the entire screen
-    await animate(size, peakSize, { duration: 0.85, ease: [0.65, 0, 0.1, 1] }).finished
+    // 1. Peel the page across the entire screen (Sped up)
+    await animate(size, peakSize, { duration: 0.55, ease: [0.65, 0, 0.1, 1] }).finished
     
     // 2. The screen is now completely covered by the exposed inverted background.
     // Swap the actual DOM theme.
     toggleTheme()
     
     // 3. Wait a tiny bit for React to apply the theme to the DOM underneath
-    await new Promise((r) => setTimeout(r, 60))
+    await new Promise((r) => setTimeout(r, 30))
     
     // 4. Instantly snap the flap back to 0. Since the DOM is now the new theme, this is invisible.
     size.set(0)
     
-    // 5. Animate the flap back to its resting BASE size
+    // 5. Animate the flap back to its resting BASE size (Sped up)
     await animate(size, BASE, {
-      duration: 0.6,
+      duration: 0.4,
       ease: [0.22, 1, 0.36, 1],
     }).finished
     
