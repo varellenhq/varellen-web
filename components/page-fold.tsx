@@ -130,9 +130,9 @@ export function PageFold() {
         theme === 'dark' ? 'light' : 'dark'
       } mode`}
     >
-      {/* 1. EXPOSED AREA (Shows the new theme underneath using solid color for max performance) */}
+      {/* 1. EXPOSED AREA (Shows the new theme underneath using high-performance color inversion) */}
       <motion.div
-        className={`absolute inset-0 ${flapClass}`}
+        className="absolute inset-0 bg-white mix-blend-difference"
         style={{
           clipPath: 'polygon(100% 0, 100% 100%, 0 0)', // Top-Right triangle
         }}
