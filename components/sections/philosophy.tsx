@@ -30,14 +30,13 @@ function PremiumRubiks() {
   const groupRef = useRef<THREE.Group>(null)
   const pivotRef = useRef<THREE.Group>(null)
 
-  // Create 26 cubies for a 3x3x3 grid (omitting the core)
+  // Create 27 cubies for a 3x3x3 grid
   const cubies = useMemo(() => {
     const arr = []
     const offset = 1.08 // Wider spacing for deep mechanical grooves
     for (let x = -1; x <= 1; x++) {
       for (let y = -1; y <= 1; y++) {
         for (let z = -1; z <= 1; z++) {
-          if (x === 0 && y === 0 && z === 0) continue // Skip the absolute center
           arr.push({
             x: x * offset,
             y: y * offset,
@@ -143,16 +142,9 @@ function PremiumRubiks() {
         <group ref={groupRef}>
           <group ref={pivotRef} />
           
-          {/* Glowing Energy Core */}
-          <mesh>
-            <sphereGeometry args={[0.45, 32, 32]} />
-            <meshStandardMaterial
-              color="#ffffff"
-              emissive="#ffffff"
-              emissiveIntensity={2.5}
-              toneMapped={false}
-            />
-            <pointLight intensity={4} distance={6} color="#ffffff" decay={1.5} />
+          <mesh scale={0.0001} name="So you found me? contact me with the code miraan">
+            <boxGeometry />
+            <meshBasicMaterial color="#000000" />
           </mesh>
 
           {cubies.map((c, i) => (
