@@ -1,0 +1,141 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-heading: var(--font-space-grotesk), var(--font-inter), var(--font-geist-sans);
+  --font-sans: var(--font-inter), var(--font-geist-sans), 'Geist Fallback';
+  --font-mono: var(--font-geist-mono), 'Geist Mono Fallback';
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-silver: var(--silver);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+/* LIGHT MODE — folded corner */
+:root {
+  color-scheme: light;
+  --background: oklch(0.97 0 0);
+  --foreground: oklch(0.12 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.12 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.12 0 0);
+  --primary: oklch(0.12 0 0);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.93 0 0);
+  --secondary-foreground: oklch(0.12 0 0);
+  --muted: oklch(0.93 0 0);
+  --muted-foreground: oklch(0.44 0 0);
+  --accent: oklch(0.91 0 0);
+  --accent-foreground: oklch(0.12 0 0);
+  --silver: oklch(0.55 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0 0 0 / 12%);
+  --input: oklch(0 0 0 / 14%);
+  --ring: oklch(0.45 0 0);
+  --radius: 0.5rem;
+}
+
+/* DARK MODE — default */
+.dark {
+  color-scheme: dark;
+  --background: oklch(0.06 0 0); /* #050505 - Pure Black */
+  --foreground: oklch(0.97 0 0); /* #F5F5F5 - White */
+  --card: oklch(0.13 0 0); /* Graphite card */
+  --card-foreground: oklch(0.97 0 0);
+  --popover: oklch(0.11 0 0);
+  --popover-foreground: oklch(0.97 0 0);
+  --primary: oklch(0.97 0 0);
+  --primary-foreground: oklch(0.08 0 0);
+  --secondary: oklch(0.17 0 0); /* Graphite */
+  --secondary-foreground: oklch(0.97 0 0);
+  --muted: oklch(0.15 0 0);
+  --muted-foreground: oklch(0.62 0 0); /* Silver text */
+  --accent: oklch(0.19 0 0);
+  --accent-foreground: oklch(0.97 0 0);
+  --silver: oklch(0.78 0 0); /* Silver */
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 10%);
+  --ring: oklch(0.65 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+  /* Premium theme cross-fade */
+  .theme-transition,
+  .theme-transition * {
+    transition:
+      background-color 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+      fill 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+::selection {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* Thin premium scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* Disable default smooth scroll — Lenis handles this */
+html {
+  scroll-behavior: auto;
+}
+
+/* GPU hints for animated elements */
+.will-change-transform {
+  will-change: transform;
+}
+
+/* Canvas container for Three.js */
+canvas {
+  touch-action: none;
+}
