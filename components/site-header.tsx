@@ -133,25 +133,31 @@ export function SiteHeader() {
 function Logo() {
   return (
     <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      viewBox="0 0 32 32"
       fill="none"
       className="text-foreground"
       aria-hidden
     >
+      {/* Left plane — primary */}
       <path
-        d="M2 3L12 21L22 3"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="square"
+        d="M4 4L16 28L16 13"
+        fill="currentColor"
+        opacity="0.9"
       />
+      {/* Right plane — recessed for 3D depth */}
       <path
-        d="M7 3L12 12L17 3"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="square"
+        d="M28 4L16 28L16 13"
+        fill="currentColor"
         opacity="0.45"
+      />
+      {/* Precision edge highlight */}
+      <path
+        d="M4 4L16 28L28 4"
+        stroke="currentColor"
+        strokeWidth="0.5"
+        opacity="0.15"
       />
     </svg>
   )

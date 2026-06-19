@@ -65,7 +65,7 @@ export default function AboutPage() {
                   Ashok Pasala
                 </div>
                 <div className="mt-3 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                  Founder &amp; CEO
+                  Founder & CEO
                 </div>
               </div>
             </ScrollReveal>

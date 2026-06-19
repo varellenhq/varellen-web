@@ -5,7 +5,7 @@ import { ArrowUpRight, Check } from 'lucide-react'
 import { INQUIRIES } from '@/lib/site-data'
 
 export function ContactForm() {
-  const [type, setType] = useState(INQUIRIES[0].id)
+  const [type, setType] = useState<string>(INQUIRIES[0].id)
   const [sent, setSent] = useState(false)
   const [form, setForm] = useState({
     name: '',

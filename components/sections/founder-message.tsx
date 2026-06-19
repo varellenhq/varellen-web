@@ -25,7 +25,7 @@ export function FounderMessage() {
               Ashok Raj Pasala
             </div>
             <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-              Founder &amp; CEO
+              Founder & CEO
             </div>
           </div>
         </ScrollReveal>
