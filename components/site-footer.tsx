@@ -18,6 +18,7 @@ const COLS = [
     links: [
       { label: 'About', href: '/about' },
       { label: 'Industries', href: '/industries' },
+      { label: 'Security', href: '/security' },
       { label: 'Contact', href: '/contact' },
     ],
   },
@@ -37,6 +38,12 @@ const COLS = [
       { label: 'X (Twitter)', href: 'https://x.com/varellenhq' },
     ],
   },
+]
+
+const LEGAL_LINKS = [
+  { label: 'Privacy Policy', href: '/privacy' },
+  { label: 'Terms of Service', href: '/terms' },
+  { label: 'Security', href: '/security' },
 ]
 
 export function SiteFooter() {
@@ -87,13 +94,28 @@ export function SiteFooter() {
           </div>
         </ScrollReveal>
 
-        <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-border pt-8 md:flex-row md:items-center">
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-            &copy; {new Date().getFullYear()} Varellen Technologies
-          </p>
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-            Precision &middot; Trust &middot; Engineering Excellence
-          </p>
+        {/* Bottom bar — copyright + legal links */}
+        <div className="mt-16 flex flex-col gap-6 border-t border-border pt-8 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
+            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+              &copy; {new Date().getFullYear()} Varellen Technologies
+            </p>
+            <span className="hidden h-3 w-px bg-border sm:block" />
+            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+              Precision &middot; Trust &middot; Engineering Excellence
+            </p>
+          </div>
+          <nav className="flex flex-wrap items-center gap-4 md:gap-6" aria-label="Legal">
+            {LEGAL_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
     </footer>
