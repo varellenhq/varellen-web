@@ -10,20 +10,21 @@ interface CubeData {
   position: [number, number, number]
   scale: number
   rotSpeed: [number, number, number]
-  driftSpeed: number
-  driftAmplitude: [number, number, number]
-  phase: number
-  emissiveHue: number
+  orbitRadius: number
+  orbitSpeed: number
+  orbitPhase: number
+  yOffset: number
 }
 
 /**
- * Floating metallic cube clusters — distributed across depth layers.
- * Each cube has independent rotation + sinusoidal drift with subtle
- * emissive accents that interact with bloom post-processing.
+ * Orbiting cube constellation — fast, deliberate, energetic.
+ * Cubes orbit the central monolith at different radii and speeds,
+ * with independent tumble rotation. Emissive surfaces interact
+ * with bloom for cinematic glow.
  */
 export function CubeCluster({
   scrollProgress,
-  count = 12,
+  count = 14,
 }: {
   scrollProgress: React.MutableRefObject<number>
   count?: number
@@ -34,28 +35,20 @@ export function CubeCluster({
   const cubes = useMemo<CubeData[]>(() => {
     const data: CubeData[] = []
     for (let i = 0; i < count; i++) {
-      const layer = i % 3 // 0=foreground, 1=midground, 2=background
-      const zBase = layer === 0 ? 2.5 : layer === 1 ? 0 : -3.5
+      const ring = i % 3
+      const radius = ring === 0 ? 3 + Math.random() * 2 : ring === 1 ? 5.5 + Math.random() * 2 : 8 + Math.random() * 2
       data.push({
-        position: [
-          (Math.random() - 0.5) * 14,
-          (Math.random() - 0.5) * 7,
-          zBase + (Math.random() - 0.5) * 2.5,
-        ],
-        scale: 0.12 + Math.random() * 0.3,
+        position: [0, 0, 0],
+        scale: 0.1 + Math.random() * 0.28,
         rotSpeed: [
-          (Math.random() - 0.5) * 0.3,
-          (Math.random() - 0.5) * 0.3,
-          (Math.random() - 0.5) * 0.15,
+          (Math.random() - 0.5) * 2.5,
+          (Math.random() - 0.5) * 2.5,
+          (Math.random() - 0.5) * 1.5,
         ],
-        driftSpeed: 0.12 + Math.random() * 0.25,
-        driftAmplitude: [
-          0.2 + Math.random() * 0.5,
-          0.15 + Math.random() * 0.35,
-          0.1 + Math.random() * 0.2,
-        ],
-        phase: Math.random() * Math.PI * 2,
-        emissiveHue: 0.55 + Math.random() * 0.15, // Blue-ish hue range
+        orbitRadius: radius,
+        orbitSpeed: (0.15 + Math.random() * 0.35) * (Math.random() > 0.5 ? 1 : -1),
+        orbitPhase: Math.random() * Math.PI * 2,
+        yOffset: (Math.random() - 0.5) * 5,
       })
     }
     return data
@@ -64,7 +57,7 @@ export function CubeCluster({
   return (
     <group>
       {cubes.map((cube, i) => (
-        <FloatingCube
+        <OrbitingCube
           key={i}
           data={cube}
           isDark={isDark}
@@ -75,7 +68,7 @@ export function CubeCluster({
   )
 }
 
-function FloatingCube({
+function OrbitingCube({
   data,
   isDark,
   scrollProgress,
@@ -97,36 +90,30 @@ function FloatingCube({
     const t = state.clock.elapsedTime
     const sp = scrollProgress.current
 
-    // Independent rotation
-    meshRef.current.rotation.x += data.rotSpeed[0] * 0.008
-    meshRef.current.rotation.y += data.rotSpeed[1] * 0.008
-    meshRef.current.rotation.z += data.rotSpeed[2] * 0.008
+    // Fast independent tumble rotation
+    meshRef.current.rotation.x += data.rotSpeed[0] * 0.012
+    meshRef.current.rotation.y += data.rotSpeed[1] * 0.012
+    meshRef.current.rotation.z += data.rotSpeed[2] * 0.012
 
-    // Sinusoidal drift
-    const phase = data.phase
-    meshRef.current.position.x =
-      data.position[0] + Math.sin(t * data.driftSpeed + phase) * data.driftAmplitude[0]
-    meshRef.current.position.y =
-      data.position[1] +
-      Math.cos(t * data.driftSpeed * 0.7 + phase) * data.driftAmplitude[1] -
-      sp * 1.8
-    meshRef.current.position.z =
-      data.position[2] + Math.sin(t * data.driftSpeed * 0.5 + phase + 1) * data.driftAmplitude[2]
+    // Orbital motion around center
+    const angle = t * data.orbitSpeed + data.orbitPhase
+    meshRef.current.position.x = Math.cos(angle) * data.orbitRadius
+    meshRef.current.position.z = Math.sin(angle) * data.orbitRadius * 0.6
+    meshRef.current.position.y = data.yOffset + Math.sin(t * 0.8 + data.orbitPhase) * 0.5 - sp * 2.5
 
-    // Theme color transition
+    // Theme color
     const targetColor = isDark ? darkColor : lightColor
-    currentColor.lerp(targetColor, 0.02)
+    currentColor.lerp(targetColor, 0.04)
     materialRef.current.color.copy(currentColor)
 
-    // Subtle emissive pulse — interacts with bloom
-    const emPulse = Math.sin(t * 0.6 + data.phase) * 0.5 + 0.5
-    materialRef.current.emissiveIntensity = isDark ? emPulse * 0.08 : emPulse * 0.03
+    // Bright emissive pulse
+    const emPulse = Math.sin(t * 1.5 + data.orbitPhase) * 0.5 + 0.5
+    materialRef.current.emissiveIntensity = isDark ? emPulse * 0.18 : emPulse * 0.06
   })
 
   return (
     <RoundedBox
       ref={meshRef}
-      position={data.position}
       scale={data.scale}
       args={[1, 1, 1]}
       radius={0.06}
@@ -136,12 +123,12 @@ function FloatingCube({
         ref={materialRef}
         color="#8a9aaf"
         metalness={1}
-        roughness={0.08}
+        roughness={0.05}
         clearcoat={1}
-        clearcoatRoughness={0.1}
-        envMapIntensity={2.8}
-        emissive="#334466"
-        emissiveIntensity={0.04}
+        clearcoatRoughness={0.08}
+        envMapIntensity={3.5}
+        emissive="#3355aa"
+        emissiveIntensity={0.08}
       />
     </RoundedBox>
   )

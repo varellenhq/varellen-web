@@ -64,9 +64,9 @@ function PremiumRubiks() {
   useFrame((_, delta) => {
     if (!pivotRef.current || !groupRef.current || !outerGroupRef.current) return
 
-    // Slow global tumble
-    outerGroupRef.current.rotation.x += delta * 0.12
-    outerGroupRef.current.rotation.y += delta * 0.18
+    // Fast global tumble — energetic
+    outerGroupRef.current.rotation.x += delta * 0.35
+    outerGroupRef.current.rotation.y += delta * 0.5
 
     if (state.current.pause > 0) {
       state.current.pause -= delta
@@ -108,11 +108,11 @@ function PremiumRubiks() {
       state.current.currentAngle = 0
       state.current.isAnimating = true
     } else {
-      // Animate the pivot using lerp for a premium magnetic "snap" effect
+      // Animate the pivot using lerp for a fast magnetic "snap" effect
       state.current.currentAngle = THREE.MathUtils.lerp(
         state.current.currentAngle,
         state.current.targetAngle,
-        0.18 // Easing factor
+        0.35 // Fast snap
       )
       pivotRef.current.rotation[state.current.axis] = state.current.currentAngle
 
@@ -131,7 +131,7 @@ function PremiumRubiks() {
         })
 
         state.current.isAnimating = false
-        state.current.pause = 0.25 // Brief pause between moves
+        state.current.pause = 0.08 // Rapid-fire moves
       }
     }
   })

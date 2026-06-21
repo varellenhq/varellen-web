@@ -2,16 +2,18 @@
 
 import { useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { RoundedBox } from '@react-three/drei'
+import { RoundedBox, MeshTransmissionMaterial } from '@react-three/drei'
 import { useTheme } from '@/components/theme-provider'
 import * as THREE from 'three'
 
 /**
- * Cinematic central monolith — the hero centerpiece.
+ * Hero monolith — a commanding architectural centerpiece.
  *
- * A tall architectural obelisk with emissive edge lines that
- * pulse with a breathing rhythm. Slowly rotates with scroll-linked
- * parallax. Physical material with clearcoat for luxury realism.
+ * Tall obsidian obelisk with:
+ * - Assertive rotation (not sluggish)
+ * - Bright emissive edge wireframe that pulses with energy
+ * - Glass-like clearcoat with high reflections
+ * - Responsive scroll parallax
  */
 export function Monolith({ scrollProgress }: { scrollProgress: React.MutableRefObject<number> }) {
   const groupRef = useRef<THREE.Group>(null)
@@ -22,14 +24,12 @@ export function Monolith({ scrollProgress }: { scrollProgress: React.MutableRefO
   const { theme } = useTheme()
   const isDark = theme === 'dark'
 
-  // Target colors for smooth theme transitions
-  const darkColor = useMemo(() => new THREE.Color('#181818'), [])
+  const darkColor = useMemo(() => new THREE.Color('#141416'), [])
   const lightColor = useMemo(() => new THREE.Color('#a0a8b4'), [])
-  const currentColor = useMemo(() => new THREE.Color('#181818'), [])
+  const currentColor = useMemo(() => new THREE.Color('#141416'), [])
 
-  // Edge geometry for the emissive wireframe outline
   const edgeGeo = useMemo(() => {
-    const box = new THREE.BoxGeometry(1.6, 4.2, 1.6)
+    const box = new THREE.BoxGeometry(1.6, 4.4, 1.6)
     return new THREE.EdgesGeometry(box)
   }, [])
 
@@ -38,47 +38,44 @@ export function Monolith({ scrollProgress }: { scrollProgress: React.MutableRefO
 
     const t = state.clock.elapsedTime
 
-    // Very slow Y-axis rotation — architectural reveal
-    groupRef.current.rotation.y = t * 0.06
-    // Subtle cinematic tilt
-    groupRef.current.rotation.x = Math.sin(t * 0.12) * 0.03
-    groupRef.current.rotation.z = Math.cos(t * 0.1) * 0.015
+    // Confident, visible rotation — not sluggish
+    groupRef.current.rotation.y = t * 0.25
+    groupRef.current.rotation.x = Math.sin(t * 0.4) * 0.06
+    groupRef.current.rotation.z = Math.cos(t * 0.35) * 0.03
 
-    // Breathing scale — subtle life
-    const breathe = 1 + Math.sin(t * 0.35) * 0.012
+    // Breathing scale
+    const breathe = 1 + Math.sin(t * 1.2) * 0.018
     meshRef.current.scale.setScalar(breathe)
 
-    // Scroll-linked Y offset — scene sinks as user scrolls
+    // Scroll parallax
     const sp = scrollProgress.current
     groupRef.current.position.y = THREE.MathUtils.lerp(
       groupRef.current.position.y,
-      0.2 - sp * 3,
-      0.03
+      0.2 - sp * 4,
+      0.06
     )
 
-    // Smooth theme color transition
+    // Theme color
     const targetColor = isDark ? darkColor : lightColor
-    currentColor.lerp(targetColor, 0.02)
+    currentColor.lerp(targetColor, 0.04)
     materialRef.current.color.copy(currentColor)
 
-    // Animate material properties for theme
     materialRef.current.metalness = THREE.MathUtils.lerp(
       materialRef.current.metalness,
-      isDark ? 0.95 : 0.85,
-      0.02
+      isDark ? 0.97 : 0.85,
+      0.04
     )
     materialRef.current.roughness = THREE.MathUtils.lerp(
       materialRef.current.roughness,
-      isDark ? 0.06 : 0.12,
-      0.02
+      isDark ? 0.04 : 0.1,
+      0.04
     )
 
-    // Pulsing emissive edges — the "intelligence" glow
+    // Bright pulsing edges — the "intelligence" signature
     if (edgeMatRef.current) {
-      const pulse = 0.15 + Math.sin(t * 0.8) * 0.1
-      const edgeAlpha = isDark ? pulse : pulse * 0.6
-      edgeMatRef.current.opacity = edgeAlpha
-      edgeMatRef.current.color.set(isDark ? '#667788' : '#8899aa')
+      const pulse = 0.35 + Math.sin(t * 2.0) * 0.25
+      edgeMatRef.current.opacity = isDark ? pulse : pulse * 0.5
+      edgeMatRef.current.color.set(isDark ? '#5588cc' : '#7799bb')
     }
   })
 
@@ -86,31 +83,31 @@ export function Monolith({ scrollProgress }: { scrollProgress: React.MutableRefO
     <group ref={groupRef} position={[0, 0.2, 0]}>
       <RoundedBox
         ref={meshRef}
-        args={[1.6, 4.2, 1.6]}
-        radius={0.06}
+        args={[1.6, 4.4, 1.6]}
+        radius={0.05}
         smoothness={8}
         castShadow
       >
         <meshPhysicalMaterial
           ref={materialRef}
-          color="#181818"
-          metalness={0.95}
-          roughness={0.06}
+          color="#141416"
+          metalness={0.97}
+          roughness={0.04}
           clearcoat={1}
-          clearcoatRoughness={0.08}
-          envMapIntensity={2.5}
-          emissive="#111122"
-          emissiveIntensity={0.05}
+          clearcoatRoughness={0.05}
+          envMapIntensity={3.5}
+          emissive="#1a2240"
+          emissiveIntensity={0.12}
         />
       </RoundedBox>
 
-      {/* Emissive wireframe edges — architectural precision lines */}
-      <lineSegments ref={edgeRef} geometry={edgeGeo} scale={meshRef.current?.scale.x ?? 1}>
+      {/* Bright wireframe edges */}
+      <lineSegments ref={edgeRef} geometry={edgeGeo}>
         <lineBasicMaterial
           ref={edgeMatRef}
-          color="#667788"
+          color="#5588cc"
           transparent
-          opacity={0.15}
+          opacity={0.35}
           linewidth={1}
         />
       </lineSegments>

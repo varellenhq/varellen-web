@@ -80,22 +80,22 @@ export function EngineScene() {
           <Monolith scrollProgress={scrollProgress} />
           <CubeCluster
             scrollProgress={scrollProgress}
-            count={isMobile ? 5 : 12}
+            count={isMobile ? 6 : 16}
           />
           {!isMobile && <FloatingElements scrollProgress={scrollProgress} />}
-          <ParticleField count={isMobile ? 60 : 200} />
+          <ParticleField count={isMobile ? 80 : 300} />
 
           {/* Cinematic post-processing */}
           <EffectComposer>
             <Bloom
-              intensity={isMobile ? 0.3 : 0.5}
-              luminanceThreshold={0.6}
-              luminanceSmoothing={0.9}
+              intensity={isMobile ? 0.5 : 0.9}
+              luminanceThreshold={0.35}
+              luminanceSmoothing={0.8}
               mipmapBlur
             />
             <Vignette
-              offset={0.3}
-              darkness={0.7}
+              offset={0.25}
+              darkness={0.85}
             />
           </EffectComposer>
         </Suspense>
